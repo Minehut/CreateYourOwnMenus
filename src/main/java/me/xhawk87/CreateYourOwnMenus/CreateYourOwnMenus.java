@@ -90,7 +90,7 @@ public class CreateYourOwnMenus extends JavaPlugin {
         scriptCommands.put("requirecurrency", new RequireCurrencyCommand(this));
         scriptCommands.put("requirelevel", new RequireLevelCommand(this));
         scriptCommands.put("requirepermission", new RequirePermissionCommand());
-        scriptCommands.put("sudo", new SudoCommand());
+        scriptCommands.put("sudo", new SudoCommand(this));
 
         // Register permissions
         PluginManager mgr = getServer().getPluginManager();
@@ -301,7 +301,7 @@ public class CreateYourOwnMenus extends JavaPlugin {
      * whitelist and it is not on the blacklist. False, if it is on the
      * blacklist or if there is a whitelist and this command is not on it
      */
-    boolean isValidMenuScriptCommand(String commandName) {
+    public boolean isValidMenuScriptCommand(String commandName) {
         if (commandName.startsWith("/")) {
             commandName = commandName.substring(1);
         }

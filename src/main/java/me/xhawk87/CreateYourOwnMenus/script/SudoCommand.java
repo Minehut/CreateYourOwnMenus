@@ -16,6 +16,7 @@
  */
 package me.xhawk87.CreateYourOwnMenus.script;
 
+import me.xhawk87.CreateYourOwnMenus.CreateYourOwnMenus;
 import me.xhawk87.CreateYourOwnMenus.Menu;
 import me.xhawk87.CreateYourOwnMenus.utils.MenuCommandUtils;
 import org.apache.commons.lang.StringUtils;
@@ -31,6 +32,12 @@ import java.util.Iterator;
  */
 public class SudoCommand implements ScriptCommand {
 
+    private CreateYourOwnMenus plugin;
+
+    public SudoCommand(CreateYourOwnMenus plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public boolean execute(Menu menu, Player player, String[] args, String command, ItemStack menuItem,
                            Iterator<String> commands, Player targetPlayer, Block targetBlock) {
@@ -45,13 +52,19 @@ public class SudoCommand implements ScriptCommand {
             return false;
         }
 
+        String[] newCommand = Arrays.copyOfRange(args, 1, args.length);
+        if(!this.plugin.isValidMenuScriptCommand(newCommand[0])) {
+            player.sendMessage(plugin.translate(player, "error-illegal-command", "Error in menu script line (command is not allowed): {0}", command));
+            return false;
+        }
+
         Player target = MenuCommandUtils.getPlayerByName(args[0]);
         if (target == null) {
             player.sendMessage(menu.translate(player, "player-not-online", "{0} is not online", args[0]));
             return true;
         }
 
-        target.chat("/" + StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " "));
+        target.chat("/" + StringUtils.join(newCommand, " "));
         return true;
     }
 }

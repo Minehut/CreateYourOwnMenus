@@ -21,6 +21,7 @@ import me.xhawk87.CreateYourOwnMenus.utils.ElevatedCommandSender;
 import me.xhawk87.CreateYourOwnMenus.utils.FileUpdater;
 import me.xhawk87.CreateYourOwnMenus.utils.MenuCommandSender;
 import me.xhawk87.CreateYourOwnMenus.utils.MenuScriptUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -542,8 +543,12 @@ public class Menu implements InventoryHolder {
         if (scriptCommand != null) {
             return scriptCommand.execute(this, player, Arrays.copyOfRange(args, 1, args.length), command, menuItem, commands, targetPlayer, targetBlock);
         } else {
-            // Otherwise, parse it as a normal command. 
-
+            // Security check
+            if (command.startsWith("/{")) {
+                player.sendMessage(plugin.translate(player, "error-illegal-command", "Error in menu script line (command is not allowed): {0}", command));
+                return false;
+            }
+            // Otherwise, parse it as a normal command.
             if (command.contains("{")) {
                 // Parse for {dynamic arguments}
                 StringBuilder commandString = new StringBuilder();
